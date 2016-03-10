@@ -1,9 +1,19 @@
 Package: fingerprints
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Analysze fingerprints images
 Version: 0.1.0
-Author: Who wrote it
+Authors@R: person("Guillermo", "Basulto-Elias", email = "guillermobasulto@gmail.com",
+                  role = c("aut", "cre"))
 Maintainer: Who to complain to <yourfault@somewhere.net>
 Description: More about what it does (maybe more than one line)
+URL: https://github.com/gbasulto/fingerprints
+BugReports: https://github.com/gbasulto/fingerprints/issues
 License: What license is it under?
 LazyData: TRUE
+Imports: png,
+    magrittr,
+    stringr,
+    plyr,
+    ggplot2,
+    dplyr,
+    tidyr
