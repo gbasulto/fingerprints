@@ -46,36 +46,27 @@ read_fingerprint_matrix <- function(dir, subdir, filename){
     return(as.matrix(img))
 } 
 
-sample_image <- function(dir, info_df, Gender = NULL,
-                         Class = NULL, Impression = NULL,
-                         ID = NULL, Finger = NULL){
-    nr <- nrow(info)
-    if(!is.null(Gender) & nr > 0) {
-        info_df %<>% filter(gender == Gender)
-        nr <- nrow(info)
-    }
-    if(!is.null(Class) & nr > 0) {
-        info_df %<>% filter(class %in% Class)
-        nr <- nrow(info)
-    }        
-    if(!is.null(Impression) & nr > 0) {
-        info_df %<>% filter(impression == Impression)
-        nr <- nrow(info)
-    }        
-    if(!is.null(ID) & nr > 0){
-        info_df %<>% filter(id == ID)
-        nr <- nrow(info)
-    }
-    if(!is.null(Finger) & nr > 0){
-        info_df %<>% filter(finger == Finger)
-        nr <- nrow(info)
-    }
 
+sample_image <- function(dir, info_df,
+                         Gender = unique(info_df$gender),
+                         Class = unique(info_df$class),
+                         Impression = unique(info_df$impression_no),
+                         ID = unique(info_df$id),
+                         Finger = unique(info_df$finger)){
+    info_df <-
+        info_df %>%
+        filter(gender %in% Gender, class %in% Class,
+               impression_no %in% Impression,
+               id %in% ID, finger %in% Finger)
+    
+    nr <- nrow(info_df)
+    
     if(nr  == 0) {
         msg <- "No fingerprint meets these criteria"
         warning(msg)
+        return(outer(1:512, 1:512, function(x, y) dnorm(x)*dnorm(y)))
     }
- 
+
     info_df %>%
         sample_n(1) %>%
         with(read_fingerprint_matrix(db_dirr, subdir,
