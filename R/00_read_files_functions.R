@@ -44,8 +44,7 @@ read_fingerprint_matrix <- function(dir, subdir, filename){
     srce <- paste0(dir, subdir, filename)
     img <- readPNG(source = srce, TRUE)
     return(as.matrix(img))
-} 
-
+}
 
 sample_image <- function(dir, info_df,
                          Gender = unique(info_df$gender),
@@ -70,5 +69,15 @@ sample_image <- function(dir, info_df,
     info_df %>%
         sample_n(1) %>%
         with(read_fingerprint_matrix(db_dirr, subdir,
-                                    paste0(filename, ".png")))
+                                     paste0(filename, ".png"))) %>%
+        as.matrix()
+}
+
+display_image <- function(image_matrix, ncolors = 256){
+    out <- image(image_matrix[512:1, 512:1],
+                 col = gray(seq(0, 1, len = ncolors)),
+                 xlab = "", ylab = "")
+    print(out)
+
+    return(out)
 }
