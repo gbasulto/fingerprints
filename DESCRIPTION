@@ -1,11 +1,11 @@
 Package: fingerprints
 Type: Package
-Title: Analysze fingerprints images
+Title: Analyze fingerprints images
 Version: 0.1.0
 Authors@R: person("Guillermo", "Basulto-Elias", email = "guillermobasulto@gmail.com",
                   role = c("aut", "cre"))
-Maintainer: Who to complain to <yourfault@somewhere.net>
-Description: More about what it does (maybe more than one line)
+Maintainer: Guillermo Basulto <guillermobasulto@gmail.com>
+Description: Allows visualization and interaction with a fingerprints database.
 URL: https://github.com/gbasulto/fingerprints
 BugReports: https://github.com/gbasulto/fingerprints/issues
 License: What license is it under?
