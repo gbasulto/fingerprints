@@ -72,7 +72,7 @@ sample_image <- function(dir, info_df,
 
     out <-
       sampled %>%
-      with(read_fingerprint_matrix(db_dirr, subdir,
+      with(read_fingerprint_matrix(dir, subdir,
                                    paste0(filename, ".png"))) %>%
       as.matrix()
 
@@ -82,9 +82,10 @@ sample_image <- function(dir, info_df,
 }
 
 display_image <- function(image_matrix, ncolors = 256){
-
-  title <- paste0("id: ", attr(image_matrix, "id"),
-                 " , impression no.: ", attr(image_matrix, "impression_no"))
+    
+    title <- paste0("id: ", attr(image_matrix, "id"),
+                    ", impression no.: ",
+                    attr(image_matrix, "impression_no"))
 
 
   out <- image(image_matrix[512:1, 512:1],
@@ -96,10 +97,10 @@ display_image <- function(image_matrix, ncolors = 256){
 }
 
 sample_pair <- function(dir, info_df,
-                              Gender = unique(info_df$gender),
-                              Class = unique(info_df$class),
-                              ID = unique(info_df$id),
-                              Finger = unique(info_df$finger)){
+                        Gender = unique(info_df$gender),
+                        Class = unique(info_df$class),
+                        ID = unique(info_df$id),
+                        Finger = unique(info_df$finger)){
     info_df <-
         info_df %>%
         filter(gender %in% Gender, class %in% Class,
@@ -112,33 +113,46 @@ sample_pair <- function(dir, info_df,
         warning(msg)
         return(outer(1:512, 1:512, function(x, y) dnorm(x)*dnorm(y)))
     }
-
+    
     sampled <-
         info_df %>%
         sample_n(2)
     
     out <-
         sampled %>%
-        dlply(c("impression_no"), 
-              with(read_fingerprint_matrix(db_dirr, subdir,
-                                           paste0(filename, ".png"))) %>%
-              as.matrix()
-              )
-              
+        dlply("impression_no",
+              function(x)
+                  x %>%
+                  with(read_fingerprint_matrix(dir, subdir,
+                                               paste0(filename,
+                                                      ".png")) %>%
+                       as.matrix()
+                       ))
+    
     attr(out, "id") <- sampled$id
     return(out)
 }
 
-display_pair <- function(image_matrix, ncolors = 256){
+display_pair <- function(image_matrices, ncolors = 256){
 
-  title <- paste0("id: ", attr(image_matrix, "id"),
-                 " , impression no.: ", attr(image_matrix, "impression_no"))
+    par(mfrow = c(1, 2))
+    
+    title <- paste0("id: ", attr(image_matrices, "id"),
+                    ", impression no.: ",
+                    attr(image_matrices, "impression_no"))
+    
+    image(image_matrices[[1]][512:1, 512:1],
+          col = gray(seq(0, 1, len = ncolors)),
+          xlab = "", ylab = "",
+#          main = title,
+          axes = FALSE)
 
+    image(image_matrices[[2]][512:1, 512:1],
+          col = gray(seq(0, 1, len = ncolors)),
+          xlab = "", ylab = "",
+#          main = title,
+          axes = FALSE)
 
-  out <- image(image_matrix[512:1, 512:1],
-               col = gray(seq(0, 1, len = ncolors)),
-               xlab = "", ylab = "",
-               main = title,
-               axes = FALSE)
-  return(out)
+    par(mfrow = c(1, 1))
+    return(0)
 }
