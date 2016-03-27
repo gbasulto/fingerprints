@@ -14,4 +14,6 @@ knitr::opts_chunk$set(
 )
 ```
 
-## Test
+## Description
+
+Functions to explore a specific fingerprints database. These functions are bundled into an `R` package.
