@@ -68,7 +68,7 @@ sample_image <- function(dir, info_df,
 
     sampled <-
       info_df %>%
-        sample_n(1)
+        sample_n(1, replace = FALSE)
 
     out <-
       sampled %>%
@@ -82,7 +82,7 @@ sample_image <- function(dir, info_df,
 }
 
 display_image <- function(image_matrix, ncolors = 256){
-    
+
     title <- paste0("id: ", attr(image_matrix, "id"),
                     ", impression no.: ",
                     attr(image_matrix, "impression_no"))
@@ -107,17 +107,17 @@ sample_pair <- function(dir, info_df,
                id %in% ID, finger %in% Finger)
 
     nr <- nrow(info_df)
-    
+
     if(nr  == 0) {
         msg <- "No fingerprint meets these criteria"
         warning(msg)
         return(outer(1:512, 1:512, function(x, y) dnorm(x)*dnorm(y)))
     }
-    
+
     sampled <-
         info_df %>%
-        sample_n(2)
-    
+        sample_n(2, replace = F)
+
     out <-
         sampled %>%
         dlply("impression_no",
@@ -128,7 +128,7 @@ sample_pair <- function(dir, info_df,
                                                       ".png")) %>%
                        as.matrix()
                        ))
-    
+
     attr(out, "id") <- sampled$id
     return(out)
 }
@@ -136,11 +136,11 @@ sample_pair <- function(dir, info_df,
 display_pair <- function(image_matrices, ncolors = 256){
 
     par(mfrow = c(1, 2))
-    
+
     title <- paste0("id: ", attr(image_matrices, "id"),
                     ", impression no.: ",
                     attr(image_matrices, "impression_no"))
-    
+
     image(image_matrices[[1]][512:1, 512:1],
           col = gray(seq(0, 1, len = ncolors)),
           xlab = "", ylab = "",
