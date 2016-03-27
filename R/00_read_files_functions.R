@@ -68,7 +68,7 @@ sample_image <- function(dir, info_df,
 
     sampled <-
       info_df %>%
-        sample_n(1, replace = FALSE)
+        sample_n(1)
 
     out <-
       sampled %>%
@@ -115,8 +115,8 @@ sample_pair <- function(dir, info_df,
     }
 
     sampled <-
-        info_df %>%
-        sample_n(2, replace = F)
+      info_df %>%
+      filter(id %in% sample(unique(id), size = 1))
 
     out <-
         sampled %>%
